@@ -1,0 +1,4 @@
+---
+ - hosts: new
+   tasks:
+    - copy: src=http.j2 dest=/tmp/httpd.conf

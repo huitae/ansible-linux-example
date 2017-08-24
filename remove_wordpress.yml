@@ -1,0 +1,77 @@
+---
+- name: Remove Jboss Components and configuration
+  hosts: wordpress-server
+  gather_facts: false
+
+  tasks:
+  - name: Stop php-fpm service
+    service:
+      name: php-fpm
+      state: stopped
+      enabled: no
+    ignore_errors: yes
+  - name: Stop nginx service
+    service:
+      name: nginx
+      state: stopped
+      enabled: no
+    ignore_errors: yes
+  - name: Stop mariadb service
+    service:
+      name: mariadb
+      state: stopped
+      enabled: no
+    ignore_errors: yes
+  - name: Delete artifacts
+    file:
+      state: absent
+      path: /srv/
+  - name: Remove php-fpm and deps and nginx
+    yum: 
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - php
+      - php-fpm
+      - php-enchant
+      - php-IDNA_Convert
+      - php-mbstring
+      - php-mysql
+      - php-PHPMailer
+      - php-process
+      - php-simplepie
+      - php-xml
+      - nginx
+  - name: Delete php conf
+    file:
+      state: absent
+      path: /etc/php-fpm.d/
+  - name: Remove MariaDB package
+    yum: 
+      name: "{{ item }}"
+      state: absent
+    with_items:
+     - mariadb-server
+     - MySQL-python
+     - libsemanage-python
+  - name: Remove repos
+    file:
+      state: absent
+      dest: "{{ item }}"
+    with_items:
+    - /etc/yum.repos.d/nginx.repo
+    - /etc/yum.repos.d/epel.repo
+    - /etc/yum.repos.d/remi.repo
+  - name: Ensure that firewalld is removed
+    yum: 
+      name: firewalld 
+      state: absent
+  - name: Delete user "wordpress"
+    user: 
+      name: wordpress 
+      state: absent 
+  - name: Delete group "wordpress"
+    group: 
+      name: wordpress
+      state: absent 
+

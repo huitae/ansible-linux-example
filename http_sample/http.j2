@@ -1,0 +1,11 @@
+{% if sslenabled %}
+
+encryption sslv3 tls
+
+{% else %}
+
+encryption tls
+
+{% endif %}
+
+maxconn = {{ max_conn }}

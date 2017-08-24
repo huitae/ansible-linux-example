@@ -1,0 +1,45 @@
+---
+- name: Remove Jboss Components and configuration
+  hosts: jboss-server-group
+  gather_facts: false
+
+  tasks:
+  - name: Stop jboss service
+    service:
+      name: jboss
+      state: stopped
+    ignore_errors: yes
+  - name: Remove Java 1.7 and some basic dependencies
+    yum: 
+      name: "{{ item }}"
+      state: absent
+    with_items:
+     - unzip
+     - java-1.7.0-openjdk
+     - libselinux-python
+     - libsemanage-python
+  - name: Clean artifacts
+    file:
+      state: absent
+      path: /opt/jboss-as-7.1.1.Final.zip 
+  - name: Clean jboss directory archive
+    file: 
+      state: absent
+      path: /usr/share/jboss-as/
+  - name: Delete user "jboss"
+    user: 
+      name: jboss 
+      state: absent 
+  - name: Delete group "jboss"
+    group: 
+      name: jboss
+      state: absent 
+  - name: Delete the init script
+    file: 
+      state: absent
+      dest: /etc/init.d/jboss 
+  - name: Ensure that firewalld is removed
+    yum: 
+      name: firewalld 
+      state: absent
+

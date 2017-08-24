@@ -1,0 +1,9 @@
+---
+- name: Ping
+  hosts: jboss-server
+  gather_facts: false
+
+  tasks:
+  - name: Ping
+    ping:
+    

@@ -1,6 +1,6 @@
 ---
 - name: Ping
-  hosts: jboss-server-group
+  hosts: apache-server-group
   gather_facts: false
 
   tasks:

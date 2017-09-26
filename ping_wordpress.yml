@@ -1,0 +1,9 @@
+---
+- name: Ping
+  hosts: wordpress-server-group
+  gather_facts: false
+
+  tasks:
+  - name: Ping
+    ping:
+    
